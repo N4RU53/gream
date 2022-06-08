@@ -134,7 +134,7 @@ left_col = sg.Column(
 
                         [sg.Multiline('',
                                       key='-TASKS-',
-                                      size=(65, 60),
+                                      size=(65,58),
                                       enable_events=True,
                                       background_color='black',
                                       text_color=IF_green,
@@ -192,7 +192,8 @@ layout = [
              term,
              left_col
             ],
-            [sg.Text('',
+            [sg.Text(' ',
+                     size=(0,1),
                      background_color=IF_green,
                      expand_x=True)]
          ]
