@@ -13,8 +13,6 @@ import io
 import threading
 import time
 
-from matplotlib.pyplot import autoscale
-
 
 
 #======================== Define functions ==========================
