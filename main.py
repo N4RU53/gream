@@ -206,8 +206,8 @@ window = sg.Window('GRERM',
                    layout,
                    size=(835,690),
                    background_color='black',
-                   resizable=False,
-                   keep_on_top=True,
+                   resizable=True,
+                   keep_on_top=False,
                    use_custom_titlebar=True,
                    titlebar_background_color='red'
                   ).Finalize()
