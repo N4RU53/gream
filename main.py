@@ -13,6 +13,8 @@ import io
 import threading
 import time
 
+from matplotlib.pyplot import autoscale
+
 
 
 #======================== Define functions ==========================
@@ -134,7 +136,7 @@ left_col = sg.Column(
 
                         [sg.Multiline('',
                                       key='-TASKS-',
-                                      size=(100, 40),
+                                      size=(65, 60),
                                       enable_events=True,
                                       background_color='black',
                                       text_color=IF_green,
@@ -142,13 +144,13 @@ left_col = sg.Column(
                                       sbar_frame_color=IF_green,
                                       sbar_trough_color='black',
                                       expand_y=True,
+                                      expand_x=True,
                                       pad=((2,2),(2,2))
                                      )]
                      ],
                      key='-LEFT-',
                      background_color=IF_green,
-                     pad=((20,20),(28,30)),
-                     expand_y=True
+                     pad=((15,20),(30,30))
                     )
 
 
@@ -162,7 +164,6 @@ term = sg.Column([
                              )],
 
                     [sg.Output(key='-OUTPUT-',
-                               size=(133,6),
                                pad=((2,2),(2,2)),
                                text_color=IF_green,
                                background_color='black',
@@ -174,7 +175,6 @@ term = sg.Column([
                                
                     [sg.Text('  INPUT >>> ', font=('Arial',12), background_color='black'),
                      sg.Input(key='-INPUT-',
-                              size=(60,None),
                               expand_x=True,
                               focus=True,
                               background_color='black',
@@ -183,7 +183,7 @@ term = sg.Column([
                     ],
                     key='-TERM-',
                     background_color=IF_green,
-                    pad=((20,20),(30,30))
+                    pad=((5,5),(30,30))
                 )
 
 
@@ -210,7 +210,7 @@ window = sg.Window('GRERM',
                    resizable=False,
                    keep_on_top=True,
                    use_custom_titlebar=True,
-                   titlebar_background_color='red',
+                   titlebar_background_color='red'
                   ).Finalize()
 
 window.maximize()
