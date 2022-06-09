@@ -1,8 +1,19 @@
 #config: utf-8
 
-# pyinstaller main.py --onefile --name GREAM --icon data\image\n4ru53_alpha_2_red.png --noconsole --clean
+'''
+[pyinstaller install command]
+pyinstaller main.py --onefile --name GREAM --icon data\image\n4ru53_alpha_2_red.png --noconsole --clean
 
-# GREAM -- GREEN TERM
+'''
+
+'''
+GREAM -- GREEN TERMINAL
+
+Copyright (c) 2022 N4RU53
+Released under the MIT license
+https://opensource.org/licenses/mit-license.php
+
+'''
 
 
 import subprocess
@@ -41,7 +52,7 @@ def get_img(path=r'data\image\n4ru53_alpha_2_red.png', maxsize=(380,360), first=
 
 def command(text):
 
-    global helps, task_update_flag, prompt, shell_flag
+    global helps, task_update_flag, prompt, shell_flag, command_list
 
     print(text)
     window['-INPUT-'].update('')
@@ -49,22 +60,31 @@ def command(text):
     if text == 'exit':
         window.close()
 
+
     elif text == 'help':
-        print(helps)
+        print(' ===================================================================')
+        print('   **** helps for commands ****')
+        for commands in command_list:
+            print(' ' + commands, end='\n\n')
+        print(' ===================================================================')
     
+
     elif text == 'taskswitch':
         task_update_flag = not task_update_flag
         window['-TASK_TITLE-'].update('      -- TASK LIST --      UPDATE = ' + str(task_update_flag))
-        print(f'task_update switchd {task_update_flag}')
+        print(f' task_update switchd {task_update_flag}')
+
 
     elif text == 'shell':
         shell_flag = True
         print(subprocess.run('chdir', shell=True, stdout=subprocess.PIPE, text=True).stdout.split('\n', 1)[0] + ' ', end='')
 
+
     elif text == '':
         pass
+
     else:
-        print(' Invalid Command. /help to check commands.\n')
+        print(' Invalid Command. Type help to check commands.\n')
 
     print(' ' + prompt + '  ', end='')
 
@@ -73,8 +93,8 @@ def command(text):
 def tasklist():
     global task_update_flag
     while task_update_flag == True:
-        window['-TASKS-'].update(subprocess.run('tasklist', stdout=subprocess.PIPE, text=True).stdout.rsplit('=', 1)[1])
-        time.sleep(3)
+        window['-TASKS-'].update(subprocess.run('tasklist', shell=True, stdout=subprocess.PIPE).stdout.decode('shift-jis').rsplit('=', 1)[1])
+        time.sleep(1)
 
 
 
@@ -102,57 +122,85 @@ prompt = '>>>'
 
 IF_green = '#54fa33'
 
-helps = '''
- ===================================================================
-  **** helps for commands ****
+command_dic = {
+                'help':'check command list and how to',
+                'taskswitch':'switch tasklist update mode',
+                'shell':'you can use shell command',
+                'exit':'close this window',
+              }
 
-   help - check command list and how to
-
-   exit - close this app
-
-   taskswitch - switch tasklist update mode
-
- ===================================================================
-
-
-'''
+command_list = [command + ' - ' + command_dic[command] for command in command_dic.keys()]
 
 
 
 #-------------------------------- define layout ------------------------------------
 
-left_col = sg.Column(
+right_col = sg.Frame('',
                      [
                         [sg.Text('      -- TASK LIST --      UPDATE = ' + str(task_update_flag),
-                             font=('Arial',16),
-                             text_color=IF_green,
-                             background_color='black',
-                             expand_x=True,
-                             pad=((3,3),(3,1)),
-                             key='-TASK_TITLE-'
-                             )],
+                                font=('Arial',16),
+                                text_color=IF_green,
+                                background_color='black',
+                                expand_x=True,
+                                pad=((3,3),(3,1)),
+                                key='-TASK_TITLE-'
+                                )],
 
                         [sg.Multiline('',
                                       key='-TASKS-',
-                                      size=(65,58),
-                                      enable_events=True,
                                       background_color='black',
                                       text_color=IF_green,
                                       sbar_background_color=IF_green,
                                       sbar_frame_color=IF_green,
                                       sbar_trough_color='black',
+                                      no_scrollbar=True,
                                       expand_y=True,
                                       expand_x=True,
                                       pad=((2,2),(2,2))
-                                     )]
+                                     )],
+
+                        [sg.Text('      -- COMMAND LIST -- ',
+                                font=('Arial',15),
+                                text_color=IF_green,
+                                background_color='black',
+                                expand_x=True,
+                                pad=((3,3),(1,1)),
+                                key='-TASK_TITLE-'
+                                )],
+
+                        [sg.Listbox(command_list,
+                                    key='-TASKMENU-',
+                                    font=('Arial',11),
+                                    background_color='black',
+                                    text_color=IF_green,
+                                    sbar_background_color=IF_green,
+                                    sbar_frame_color=IF_green,
+                                    sbar_trough_color='black',
+                                    no_scrollbar=True,
+                                    expand_x=True,
+                                    size=(1,13),
+                                    pad=((2,2),(2,2))
+                                    )],
+
+                        [sg.Button('APPLY',
+                                font=('Arial',12),
+                                button_color='black',
+                                expand_x=True,
+                                use_ttk_buttons=True,
+                                mouseover_colors=('black','white'),
+                                key='-APPLY-',
+                                pad=((2,2),(2,2))
+                                )],
                      ],
-                     key='-LEFT-',
+                     key='-RIGHT-',
                      background_color=IF_green,
-                     pad=((15,20),(30,30))
+                     pad=((0,0),(30,30)),
+                     size=(480,1),
                     )
 
 
-term = sg.Column([
+term = sg.Frame('',
+                [
                     [sg.Text('      -- COMMAND_LINE AND STDOUT --  ',
                              font=('Arial',16),
                              text_color=IF_green,
@@ -168,6 +216,7 @@ term = sg.Column([
                                sbar_background_color=IF_green,
                                sbar_frame_color=IF_green,
                                sbar_trough_color='black',
+                               sbar_width=1,
                                echo_stdout_stderr=True
                                )],
                                
@@ -181,17 +230,23 @@ term = sg.Column([
                     ],
                     key='-TERM-',
                     background_color=IF_green,
-                    pad=((5,5),(30,30))
+                    pad=((0,0),(30,30))
                 )
 
 
-layout = [
+layout = [  [sg.Text(' ',
+                     size=(0,1),
+                     background_color='#c70000',
+                     pad=((0,0),(0,0)),
+                     expand_x=True)],
+
             [sg.Image(data=get_img(first=True),
                       background_color='black',
                       pad=((20,0),(250,0))),
              term,
-             left_col
+             right_col
             ],
+
             [sg.Text(' ',
                      size=(0,1),
                      background_color=IF_green,
@@ -208,12 +263,12 @@ window = sg.Window('GRERM',
                    background_color='black',
                    resizable=True,
                    keep_on_top=False,
-                   use_custom_titlebar=True,
-                   titlebar_background_color='red'
+                   no_titlebar=True
                   ).Finalize()
 
 window.maximize()
 
+window['-RIGHT-'].expand(expand_x=False, expand_y=True)
 window['-TERM-'].expand(expand_x=True, expand_y=True)
 window['-OUTPUT-'].expand(expand_x=True, expand_y=True)
 window['-INPUT-'].bind("<Return>", "_Enter")
@@ -245,5 +300,11 @@ while True:
         else:
             shell(values['-INPUT-'])
 
+    elif event == '-APPLY-':
+        if shell_flag == False:
+            command(str(values['-TASKMENU-']).split(' ', 1)[0].split('\'')[1])
+        else:
+            continue
+        
 
 window.close()
